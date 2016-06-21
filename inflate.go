@@ -9,7 +9,7 @@ import (
 )
 
 var d = flag.Bool("d", false, "Deflates input instead")
-var l = flag.Int("l", 3, "Deflate compression level")
+var l = flag.Int("l", -1, "Deflate compression level")
 
 func main() {
 	flag.Parse()
