@@ -9,11 +9,12 @@ import (
 )
 
 var d = flag.Bool("d", false, "Deflates input instead")
+var l = flag.Int("l", 3, "Deflate compression level")
 
 func main() {
 	flag.Parse()
 	if *d {
-		w, err := flate.NewWriter(os.Stdout, 1)
+		w, err := flate.NewWriter(os.Stdout, *l)
 		if err != nil {
 			log.Fatal(err)
 		}
