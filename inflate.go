@@ -12,7 +12,7 @@ import (
 
 var d = flag.Bool("d", false, "Deflates input instead")
 var l = flag.Int("l", -1, "Deflate compression level")
-var alg = flag.String("alg", "flate", "The compression algorithm to use.\n\tSupported algorithms:\n\t\tflate\n\t\tzlib\n")
+var alg = flag.String("alg", "flate", "The compression algorithm to use.\n\tSupported algorithms:\n\t\t'flate','f'\n\t\t'zlib','z'\n")
 
 func main() {
 	flag.Parse()
