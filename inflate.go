@@ -1,7 +1,9 @@
 package main
 
 import (
+	"compress/bzip2"
 	"compress/flate"
+	"compress/gzip"
 	"compress/zlib"
 	"flag"
 	"fmt"
@@ -10,9 +12,13 @@ import (
 	"os"
 )
 
-var d = flag.Bool("d", false, "Deflates input instead")
-var l = flag.Int("l", -1, "Deflate compression level")
-var alg = flag.String("alg", "flate", "The compression algorithm to use.\n\tSupported algorithms:\n\t\t'flate','f'\n\t\t'zlib','z'\n")
+var d = flag.Bool("d", false, "Compresses input instead")
+var l = flag.Int("level", -1, "Deflate compression level")
+var alg = flag.String("alg", "flate", `The compression algorithm to use
+	Supported algorithms: 
+		'flate','f' 
+		'zlib' ,'z' 
+		'gzip' ,'g'`)
 
 func main() {
 	flag.Parse()
@@ -34,7 +40,6 @@ func main() {
 }
 
 /*TODO
-https://golang.org/pkg/compress/gzip/
 https://golang.org/pkg/compress/lzw/
 https://golang.org/pkg/compress/bzip2/
 */
@@ -45,6 +50,10 @@ func NewWriter() (io.WriteCloser, error) {
 		return flate.NewWriter(os.Stdout, *l)
 	case "zlib", "z":
 		return zlib.NewWriter(os.Stdout), nil
+	case "gzip", "g":
+		return gzip.NewWriter(os.Stdout), nil
+	case "bzip2", "b":
+		return nil, fmt.Errorf("Bzip does not support compressing yet.")
 	default:
 		return nil, fmt.Errorf("Unknown Algorithm")
 	}
@@ -56,6 +65,10 @@ func NewReader() (io.ReadCloser, error) {
 		return flate.NewReader(os.Stdin), nil
 	case "zlib", "z":
 		return zlib.NewReader(os.Stdin)
+	case "gzip", "g":
+		return gzip.NewReader(os.Stdin)
+	case "bzip2", "b":
+		return bzip2.NewReader(os.Stdin), nil
 	default:
 		return nil, fmt.Errorf("Unknown Algorithm")
 	}
