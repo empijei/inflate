@@ -59,6 +59,14 @@ func NewWriter() (io.WriteCloser, error) {
 	}
 }
 
+type bzip2Wrapper struct {
+	io.Reader
+}
+
+func (b bzip2Wrapper) Close() error {
+	return nil
+}
+
 func NewReader() (io.ReadCloser, error) {
 	switch *alg {
 	case "flate", "f":
@@ -68,7 +76,9 @@ func NewReader() (io.ReadCloser, error) {
 	case "gzip", "g":
 		return gzip.NewReader(os.Stdin)
 	case "bzip2", "b":
-		return bzip2.NewReader(os.Stdin), nil
+		b := bzip2.NewReader(os.Stdin)
+		toret := bzip2Wrapper{b}
+		return toret, nil
 	default:
 		return nil, fmt.Errorf("Unknown Algorithm")
 	}
