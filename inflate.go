@@ -18,7 +18,8 @@ var alg = flag.String("alg", "flate", `The compression algorithm to use
 	Supported algorithms: 
 		'flate','f' 
 		'zlib' ,'z' 
-		'gzip' ,'g'`)
+		'gzip' ,'g'
+		'bzip2','b'`)
 
 func main() {
 	flag.Parse()
@@ -42,15 +43,19 @@ func main() {
 /*TODO
 https://golang.org/pkg/compress/lzw/
 https://golang.org/pkg/compress/bzip2/
+GUESS THE ALG?
 */
 
 func NewWriter() (io.WriteCloser, error) {
 	switch *alg {
 	case "flate", "f":
+		log.Println("Compressing with deflate")
 		return flate.NewWriter(os.Stdout, *l)
 	case "zlib", "z":
+		log.Println("Compressing with zlib")
 		return zlib.NewWriter(os.Stdout), nil
 	case "gzip", "g":
+		log.Println("Compressing with gzip")
 		return gzip.NewWriter(os.Stdout), nil
 	case "bzip2", "b":
 		return nil, fmt.Errorf("Bzip does not support compressing yet.")
@@ -70,12 +75,16 @@ func (b bzip2Wrapper) Close() error {
 func NewReader() (io.ReadCloser, error) {
 	switch *alg {
 	case "flate", "f":
+		log.Println("Decompressing with inflate")
 		return flate.NewReader(os.Stdin), nil
 	case "zlib", "z":
+		log.Println("Decompressing with zlib")
 		return zlib.NewReader(os.Stdin)
 	case "gzip", "g":
+		log.Println("Decompressing with gzip")
 		return gzip.NewReader(os.Stdin)
 	case "bzip2", "b":
+		log.Println("Decompressing with bzip2")
 		b := bzip2.NewReader(os.Stdin)
 		toret := bzip2Wrapper{b}
 		return toret, nil
