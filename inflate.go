@@ -13,7 +13,7 @@ import (
 )
 
 var d = flag.Bool("d", false, "Compresses input instead")
-var l = flag.Int("level", -1, "Deflate compression level")
+var l = flag.Int("l", -1, "Deflate compression level")
 var alg = flag.String("alg", "flate", `The compression algorithm to use
 	Supported algorithms: 
 		'flate','f' 
