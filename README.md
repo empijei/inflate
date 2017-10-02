@@ -1,5 +1,5 @@
 # inflate
-Just a pipeline wrapper around flate algorithm
+Just a pipeline wrapper around several compression algorithms
 
 # Install 
 `go get github.com/empijei/inflate`
